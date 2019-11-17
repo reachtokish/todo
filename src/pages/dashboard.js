@@ -1,50 +1,94 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import Header from './../components/header';
+import AddTodoForm from './../components/addTodoForm';
+import AddBucketForm from './../components/addBucketForm';
+import { DashboardContext } from './../context';
+import Sidebar from './../components/sidebar';
+import TodoList from './../components/todoList';
+import { setCurrentUser } from './../actions/setCurrentUser';
+import { getAllBucket } from './../actions/bucket';
+import { getAllTodo } from './../actions/todo';
 
 class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			todoFormVisible: false,
+			bucketFormVisible: false,
+			status: "not done"
+		}
+
+		this.handleChange = this.handleChange.bind(this);
+
+	}
+
+	handleChange(e) {
+		const { name, value } = e.target;
+		this.setState({
+			[name]: value
+		})
+	}
+
+	toggleModal(key, value) {
+		this.setState({
+			[key]: value
+		})
+	}
+
+	componentDidMount() {
+		const { dispatch } = this.props;
+		if(localStorage.getItem("user")) {
+			const { dispatch } = this.props;
+			dispatch(setCurrentUser(JSON.parse(localStorage.getItem("user"))))
+				.then(
+					res => {
+						dispatch(getAllBucket())
+							.then(
+								res => {
+									dispatch(getAllTodo());
+								}
+							);
+					}
+				);
+		}
 	}
 
 	render() {
+		const { todoFormVisible, bucketFormVisible, status } = this.state;
 		return (
-			<div className="App">
-				<header>
-					<h1>Header</h1>
-					<button>Logout</button>
-				</header>
-				<aside>
-					<h3>Sidebar</h3>
-					<button>Add Todos +</button>
-					<h4>Bucket List</h4>
-					<button>Bucket 1</button>
-					<button>Bucket 2</button>
-					<button>Bucket 3</button>
-					<h4>Todo List</h4>
-					<div>
-						<p>Todo 1</p>
-						<p>Todo Description</p>
-						<button>Edit</button>
-						<button>Delete</button>
-						<hr />
+			<main>
+				<Header />
+				<DashboardContext.Provider
+					value={{
+						toggleModal: (key, value) => this.toggleModal(key, value)
+					}}
+				>
+					{todoFormVisible && <AddTodoForm />}
+					{bucketFormVisible && <AddBucketForm />}
+					<Sidebar />
+					<div className="body_content">
+						<div className="body_title">
+							<h2>Todos</h2>
+							<select className="filter_todo" name="status" onChange={this.handleChange} value={status}>
+								<option value="not done">Not Done</option>
+								<option value="done">Done</option>
+							</select>
+						</div>
+						<TodoList
+							status={status}
+						/>
 					</div>
-					<div>
-						<p>Todo 2</p>
-						<p>Todo Description</p>
-						<button>Edit</button>
-						<button>Delete</button>
-						<hr />
-					</div>
-					<div>
-						<p>Todo 3</p>
-						<p>Todo Description</p>
-						<button>Edit</button>
-						<button>Delete</button>
-						<hr />
-					</div>
-				</aside>
-			</div>
+				</DashboardContext.Provider>
+			</main>
 		);
 	}
 }
 
-export default Dashboard;
+function mapStateToProps(state) {
+    return {
+        currentUser: state.currentUser
+    };
+}
+
+export default connect(mapStateToProps)(Dashboard);

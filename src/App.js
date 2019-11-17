@@ -1,7 +1,6 @@
 import React from 'react';
 import { RouteComponent } from './routes';
 import { registerUser } from './actions/addUsers';
-import { setCurrentUser } from './actions/setCurrentUser';
 import { connect } from 'react-redux';
 
 const users = [{
@@ -32,10 +31,6 @@ class App extends React.Component {
 	componentDidMount() {
 		for(let user of users) {
 			registerUser("users", user);
-		}
-		if(localStorage.getItem("user")) {
-			const { dispatch } = this.props;
-			dispatch(setCurrentUser(JSON.parse(localStorage.getItem("user"))));
 		}
 	}
 	

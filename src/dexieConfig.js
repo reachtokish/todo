@@ -4,8 +4,8 @@ var db = new Dexie('hellodb');
 
 db.version(1).stores({
     users: "++id,email,password,first_name,last_name,token",
-    todos: "++id,title,body,bucket_id,deleted,done,bucket_id,user_id",
-    buckets: "++id,title,description,user_id"
+    todos: "++id,title,description,bucket_id,is_done,user_id,date_added",
+    buckets: "++id,title,user_id,date_added"
 });
 
 export default db;

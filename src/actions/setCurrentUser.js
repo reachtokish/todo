@@ -6,5 +6,6 @@ export function setCurrentUser(user) {
             type: actionTypes.SET_CURRENT_USER,
             payload: user
         });
+        return Promise.resolve();
     }
 }

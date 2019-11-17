@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 import actionTypes from './../actionTypes';
+import { buckets } from './buckets';
+import { todos } from './todos';
 
 const INITIAL_STATE = {
     user: null
@@ -17,7 +19,16 @@ function currentUser(state = INITIAL_STATE, action) {
 }
 
 const appReducer = combineReducers({
-    currentUser
+    currentUser,
+    buckets,
+    todos
 })
 
-export default appReducer;
+const rootReducer = (state, action) => {
+	if (action.type === actionTypes.LOGOUT) {
+	  	state = undefined
+    }
+	return appReducer(state, action)
+}
+
+export default rootReducer;

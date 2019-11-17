@@ -3,6 +3,7 @@ import { IDBService } from './../indexedDB';
 import { history } from './../history';
 import { setCurrentUser } from './../actions/setCurrentUser';
 import { connect } from 'react-redux';
+import DB from './../dexieConfig';
 
 class Login extends React.Component {
 	constructor(props) {
@@ -27,59 +28,60 @@ class Login extends React.Component {
 	handleSubmit(e) {
 		e.preventDefault();
 		const { email, password } = this.state;
-		IDBService.findWhere("users", "email", email)
-			.then(
-				res => {
-					const response = res;
-					if(response.password === password) {
+		if(email && password) {
+			DB.users.where('email').equals(email).toArray(user => {
+				if(user.length > 0) {
+					const checkValidPass = user.filter(el => el.password === password);
+					if(checkValidPass.length > 0) {
 						const { dispatch } = this.props;
-						dispatch(setCurrentUser(response));
-						localStorage.setItem("user", JSON.stringify(response));
+						dispatch(setCurrentUser(user[0]));
+						localStorage.setItem("user", JSON.stringify(user[0]));
 						history.push(`/dashboard`);
 					}
 					else {
 						alert("Wrong username or password");
 					}
-				},
-				err => {
+				}
+				else {
 					alert("Wrong username or password");
 				}
-			)
-			.catch(
-				err => {
-					console.log(err);
-				}
-			)
+			});
+		}
+		else {
+			alert("Email or Password can't be empty");
+		}
 	}
 
 	render() {
 		const { email, password } = this.state;
 		return (
-			<div className="App">
-				<h1>Login</h1>
-				<form onSubmit={this.handleSubmit}>
-					<div>
-						<label>Email:</label>
-						<input
-							type="text"
-							placeholder="Enter email"
-							value={email}
-							name="email"
-							onChange={this.handleChange}
-						/>
-					</div>
-					<div>
-						<label>Password:</label>
-						<input
-							type="password"
-							placeholder="Enter password"
-							value={password}
-							name="password"
-							onChange={this.handleChange}
-						/>
-					</div>
-					<button>Login</button>
-				</form>
+			<div className="login_page">
+				<div>
+					<h1>Login</h1>
+					<form onSubmit={this.handleSubmit}>
+						<div>
+							<label>Email:</label>
+							<input
+								type="text"
+								placeholder="Enter email"
+								value={email}
+								name="email"
+								onChange={this.handleChange}
+							/>
+						</div>
+						<div>
+							<label>Password:</label>
+							<input
+								type="password"
+								placeholder="Enter password"
+								value={password}
+								name="password"
+								onChange={this.handleChange}
+							/>
+						</div>
+						<button>Login</button>
+					</form>
+				</div>
 			</div>
 		);
 	}

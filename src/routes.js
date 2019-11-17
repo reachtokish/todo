@@ -8,7 +8,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     <Route
         {...rest}
         render={props =>
-            localStorage.getItem("token") && localStorage.getItem("token") !== null ? (
+            localStorage.getItem("user") && localStorage.getItem("user") !== null ? (
                 <Component {...props} />
             ) : (
                 <Redirect
@@ -26,10 +26,10 @@ const PublicRoute = ({ component: Component, ...rest }) => (
     <Route
         {...rest}
         render={props =>
-            localStorage.getItem("token") && localStorage.getItem("token") !== null ? (
+            localStorage.getItem("user") && localStorage.getItem("user") !== null ? (
                 <Redirect
                     to={{
-                        pathname: `${process.env.PUBLIC_URL}/orders`,
+                        pathname: `${process.env.PUBLIC_URL}/dashboard`,
                         state: { from: props.location }
                     }}
                 />
@@ -45,7 +45,7 @@ export class RouteComponent extends Component {
         return (
             <Router history={history}>
                 <PublicRoute exact path={'/'} component={Login} />
-                <PublicRoute path={'/dashboard'} component={Dashboard} />
+                <PrivateRoute path={'/dashboard'} component={Dashboard} />
             </Router>
         )
     }
