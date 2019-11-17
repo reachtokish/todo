@@ -1,5 +1,8 @@
 import React from 'react';
-import { indexedDBService } from './../indexedDB';
+import { IDBService } from './../indexedDB';
+import { history } from './../history';
+import { setCurrentUser } from './../actions/setCurrentUser';
+import { connect } from 'react-redux';
 
 class Login extends React.Component {
 	constructor(props) {
@@ -23,15 +26,30 @@ class Login extends React.Component {
 
 	handleSubmit(e) {
 		e.preventDefault();
-	}
-
-	componentDidMount() {
-		indexedDBService.findWhere("users", "first_name", "test")
+		const { email, password } = this.state;
+		IDBService.findWhere("users", "email", email)
 			.then(
 				res => {
-					console.log(res);
+					const response = res;
+					if(response.password === password) {
+						const { dispatch } = this.props;
+						dispatch(setCurrentUser(response));
+						localStorage.setItem("user", JSON.stringify(response));
+						history.push(`/dashboard`);
+					}
+					else {
+						alert("Wrong username or password");
+					}
+				},
+				err => {
+					alert("Wrong username or password");
 				}
-			);
+			)
+			.catch(
+				err => {
+					console.log(err);
+				}
+			)
 	}
 
 	render() {
@@ -67,4 +85,4 @@ class Login extends React.Component {
 	}
 }
 
-export default Login;
+export default connect()(Login);

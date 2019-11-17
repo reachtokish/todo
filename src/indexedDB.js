@@ -17,7 +17,7 @@ async function findWhere(table, column, value) {
     return new Promise((resolve, reject) => {
         DB[table]
             .where(column)
-            .equalsIgnoreCase(value)
+            .equals(value)
             .each(friend => {
                 resolve(friend);
             })
@@ -28,7 +28,7 @@ async function findWhere(table, column, value) {
     })
 }
 
-export const indexedDBService = {
+export const IDBService = {
     addData,
     findWhere
 }

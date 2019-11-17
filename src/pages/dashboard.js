@@ -3,55 +3,45 @@ import React from 'react';
 class Dashboard extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			email: "",
-			password: ""
-		}
-
-		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
-
-	}
-
-	handleChange(e) {
-		const { name, value } = e.target;
-		this.setState({
-			[name]: value
-		})
-	}
-
-	handleSubmit(e) {
-		e.preventDefault();
 	}
 
 	render() {
-		const { email, password } = this.state;
 		return (
 			<div className="App">
-				<h1>Signup</h1>
-				<form onSubmit={this.handleSubmit}>
+				<header>
+					<h1>Header</h1>
+					<button>Logout</button>
+				</header>
+				<aside>
+					<h3>Sidebar</h3>
+					<button>Add Todos +</button>
+					<h4>Bucket List</h4>
+					<button>Bucket 1</button>
+					<button>Bucket 2</button>
+					<button>Bucket 3</button>
+					<h4>Todo List</h4>
 					<div>
-						<label>Email:</label>
-						<input
-							type="text"
-							placeholder="Enter email"
-							value={email}
-							name="email"
-							onChange={this.handleChange}
-						/>
+						<p>Todo 1</p>
+						<p>Todo Description</p>
+						<button>Edit</button>
+						<button>Delete</button>
+						<hr />
 					</div>
 					<div>
-						<label>Password:</label>
-						<input
-							type="password"
-							placeholder="Enter password"
-							value={password}
-							name="password"
-							onChange={this.handleChange}
-						/>
+						<p>Todo 2</p>
+						<p>Todo Description</p>
+						<button>Edit</button>
+						<button>Delete</button>
+						<hr />
 					</div>
-					<button>Login</button>
-				</form>
+					<div>
+						<p>Todo 3</p>
+						<p>Todo Description</p>
+						<button>Edit</button>
+						<button>Delete</button>
+						<hr />
+					</div>
+				</aside>
 			</div>
 		);
 	}

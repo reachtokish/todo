@@ -1,14 +1,15 @@
 import { combineReducers } from 'redux';
+import actionTypes from './../actionTypes';
 
 const INITIAL_STATE = {
-    data: 0
+    user: null
 };
 
-function userData(state = INITIAL_STATE, action) {
+function currentUser(state = INITIAL_STATE, action) {
     switch(action.type) {
-        case "UPDATE_USER":
+        case actionTypes.SET_CURRENT_USER:
             return {
-                data: action.payload
+                user: action.payload
             }
         default:
             return state;
@@ -16,7 +17,7 @@ function userData(state = INITIAL_STATE, action) {
 }
 
 const appReducer = combineReducers({
-    userData: userData
+    currentUser
 })
 
 export default appReducer;
