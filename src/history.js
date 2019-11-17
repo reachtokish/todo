@@ -1,0 +1,1 @@
+export let history = require("history").createBrowserHistory();
